@@ -242,11 +242,14 @@ function ServerEntry:SetServerData(serverData)
 	if serverData.playerSkill ~= nil then
 	    local pSkill = serverData.playerSkill
 			
-            if pSkill == 0 then
-                self.hiveSkill:SetText(string.format("N/A"))
-				
-		if serverData.numPlayers == 0 then
-			self.hiveSkill:SetColor(Color(1, 1, 1))
+            if pSkill <= 0 then
+		-- If the server fails to respond, try to use a previous value (if present)
+		if tonumber(self.hiveSkill:GetText()) == nil or serverData.numPlayers == 0 then
+			self.hiveSkill:SetText(string.format("N/A"))
+
+			if serverData.numPlayers == 0 then
+				self.hiveSkill:SetColor(Color(1, 1, 1))
+			end
 		end
 				
 	    else -- the hive skill is greater than 0
