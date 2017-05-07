@@ -14,9 +14,9 @@ local kPrivateIconTexture = PrecacheAsset("ui/lock.dds")
 
 local kPingIconSize = Vector(37, 24, 0)
 local kPingIconTextures = {
-    {50,  PrecacheAsset("ui/icons/ping_5.dds")},
-    {100, PrecacheAsset("ui/icons/ping_4.dds")},
-    {150, PrecacheAsset("ui/icons/ping_3.dds")},
+    {60,  PrecacheAsset("ui/icons/ping_5.dds")},
+    {110, PrecacheAsset("ui/icons/ping_4.dds")},
+    {160, PrecacheAsset("ui/icons/ping_3.dds")},
     {250, PrecacheAsset("ui/icons/ping_2.dds")},
     {999, PrecacheAsset("ui/icons/ping_1.dds")},
 }
@@ -242,7 +242,12 @@ function ServerEntry:SetServerData(serverData)
 	if serverData.playerSkill ~= nil then
 	    local pSkill = serverData.playerSkill
 			
-            if pSkill <= 0 then
+	    -- Only support ns2, ns2+ or ns2Large. Don't allow other custom gamemodes to break things
+	    if serverData.mode ~= "ns2" and serverData.mode ~= "ns2+" and serverData.mode ~= "ns2Large" then
+		self.hiveSkill:SetText(string.format("N/A"))					
+		self.hiveSkill:SetColor(Color(1, 1, 1))
+			
+            elseif pSkill <= 3 then
 		-- If the server fails to respond, try to use a previous value (if present)
 		if tonumber(self.hiveSkill:GetText()) == nil or serverData.numPlayers == 0 then
 			self.hiveSkill:SetText(string.format("N/A"))
