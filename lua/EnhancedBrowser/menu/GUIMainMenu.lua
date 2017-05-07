@@ -47,8 +47,8 @@ function GUIMainMenu:CreateServerListWindow()
     local serverList = self.serverList
 
     --Default sorting
-    UpdateSortOrder(1)
-    serverList:SetComparator(SortByRating, true)
+    UpdateSortOrder(7)
+    serverList:SetComparator(SortByPlayers, false)
 
     local entryCallbacks = {
         { OnClick = function() UpdateSortOrder(1) serverList:SetComparator(SortByRating, true) end },
