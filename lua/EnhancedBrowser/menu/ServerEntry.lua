@@ -73,8 +73,8 @@ function ServerEntry:Initialize()
     self.private:SetSize(kPrivateIconSize)
     self.private:SetTexture(kPrivateIconTexture)
 	
-	self.hiveSkill = CreateTextItem(self, true)
-	self.hiveSkill:SetFontName(Fonts.kAgencyFB_Small)
+    self.hiveSkill = CreateTextItem(self, true)
+    self.hiveSkill:SetFontName(Fonts.kAgencyFB_Small)
     self.hiveSkill:SetTextAlignmentX(GUIItem.Align_Center)
     
     self:SetFontName(Fonts.kAgencyFB_Small)
@@ -189,8 +189,8 @@ function ServerEntry:SetFontName(fontName)
     self.playerCount:SetScale(GetScaledVector())
     self.rank:SetFontName(fontName)
     self.rank:SetScale(GetScaledVector())
-	self.hiveSkill:SetFontName(fontName)
-	self.hiveSkill:SetScale(GetScaledVector())
+    self.hiveSkill:SetFontName(fontName)
+    self.hiveSkill:SetScale(GetScaledVector())
 end
 
 function ServerEntry:SetTextColor(color)
@@ -238,31 +238,31 @@ function ServerEntry:SetServerData(serverData)
             end
         end
 		
-		-- Handle setting the hive skill column
-		if serverData.playerSkill ~= nil then
-			local pSkill = serverData.playerSkill
+	-- Handle setting the hive skill column
+	if serverData.playerSkill ~= nil then
+	    local pSkill = serverData.playerSkill
 			
             if pSkill == 0 then
                 self.hiveSkill:SetText(string.format("N/A"))
 				
-				if serverData.numPlayers == 0 then
-					self.hiveSkill:SetColor(Color(1, 1, 1))
-				end
+		if serverData.numPlayers == 0 then
+			self.hiveSkill:SetColor(Color(1, 1, 1))
+		end
 				
-			else -- the hive skill is greater than 0
-				self.hiveSkill:SetText(string.format("%d", pSkill))
+	    else -- the hive skill is greater than 0
+		self.hiveSkill:SetText(string.format("%d", pSkill))
 				
-				-- set percent of red to use
-				local hRed = 0 				
-				if pSkill > 1199 then hRed = 1 end
+		-- set percent of red to use
+		local hRed = 0 				
+		if pSkill > 1199 then hRed = 1 end
 				
-				-- set percent of green to use
-				local hGreen = 1 
-				if pSkill > 1999 then hGreen = 0 
-				elseif pSkill > 1649 then hGreen = 0.6 
-				else hGreen = 1 end
-								   
-				self.hiveSkill:SetColor(Color(hRed, hGreen, 0))
+		-- set percent of green to use
+		local hGreen = 1 
+		if pSkill > 1999 then hGreen = 0 
+		elseif pSkill > 1649 then hGreen = 0.6 
+		else hGreen = 1 end
+						   
+		self.hiveSkill:SetColor(Color(hRed, hGreen, 0))
             end
         end			
         
@@ -347,9 +347,9 @@ function ServerEntry:SetWidth(width, isPercentage, time, animateFunc, callBack)
         currentWidth = GUIScale(self.playerCount:GetTextWidth(self.playerCount:GetText()))
         self.playerCount:SetPosition(Vector((currentPos + currentPercentage/2 - currentWidth/2), 0, 0))
 		
-		currentPos = currentPos + currentPercentage + kPaddingSize
+	currentPos = currentPos + currentPercentage + kPaddingSize
         currentPercentage = width * 0.11
-		currentWidth = GUIScale(self.hiveSkill:GetTextWidth(self.hiveSkill:GetText()))
+	currentWidth = GUIScale(self.hiveSkill:GetTextWidth(self.hiveSkill:GetText()))
         self.hiveSkill:SetPosition(Vector((currentPos + currentPercentage/2 - currentWidth/2), 0, 0))
         
         currentPos = currentPos + currentPercentage + kPaddingSize
