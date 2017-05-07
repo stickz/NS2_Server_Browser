@@ -1,0 +1,4 @@
+modEntry = {
+	FileHooks = "lua/EnhancedBrowser/FileHooks.lua",
+	Priority = 9
+}
