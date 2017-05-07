@@ -18,6 +18,7 @@ function GUIMainMenu:CreateServerListWindow()
     self.serverRowNames = CreateMenuElement(self.playWindow, "Table")
     self.serverList = CreateMenuElement(self.playWindow:GetContentBox(), "ServerList")
     
+    -- Use a hack for now to partially realign the top bar
     local columnClassNames =
     {
         "rank",
@@ -27,7 +28,7 @@ function GUIMainMenu:CreateServerListWindow()
         "game",
         "rate", -- map
         "players", --players
-		"rate", -- hive
+	"rate", -- hive
         "rate",
         "ping"
     }
@@ -39,7 +40,7 @@ function GUIMainMenu:CreateServerListWindow()
 						Locale.ResolveString("SERVERBROWSER_GAME"), 
 						Locale.ResolveString("SERVERBROWSER_MAP"), 
 						Locale.ResolveString("SERVERBROWSER_PLAYERS"),
-						"HIVE",
+						"HIVE", -- To Do: convert this to a translated locale
 						Locale.ResolveString("SERVERBROWSER_PERF"), 
 						Locale.ResolveString("SERVERBROWSER_PING") } }
     
@@ -57,7 +58,7 @@ function GUIMainMenu:CreateServerListWindow()
         { OnClick = function() UpdateSortOrder(5) serverList:SetComparator(SortByMode) end },
         { OnClick = function() UpdateSortOrder(6) serverList:SetComparator(SortByMap) end },
         { OnClick = function() UpdateSortOrder(7) serverList:SetComparator(SortByPlayers) end },
-		{ OnClick = function() UpdateSortOrder(7) serverList:SetComparator(SortByPlayers) end },
+	{ OnClick = function() UpdateSortOrder(7) serverList:SetComparator(SortByPlayers) end }, -- To Do: Add hive skill sorting
         { OnClick = function() UpdateSortOrder(8) serverList:SetComparator(SortByPerformance) end },
         { OnClick = function() UpdateSortOrder(9) serverList:SetComparator(SortByPing) end }
     }
@@ -67,15 +68,15 @@ function GUIMainMenu:CreateServerListWindow()
     self.serverRowNames:SetColumnClassNames(columnClassNames)
     self.serverRowNames:SetEntryCallbacks(entryCallbacks)
     self.serverRowNames:SetRowPattern( { SERVERBROWSER_RANK, 
-										RenderServerNameEntry, 
-										RenderServerNameEntry, 
-										RenderServerNameEntry, 
-										RenderServerNameEntry,
-										RenderServerNameEntry, 
-										RenderServerNameEntry, 
-										RenderServerNameEntry, 
-										RenderServerNameEntry, 
-										RenderServerNameEntry, } )
+						RenderServerNameEntry, 
+						RenderServerNameEntry, 
+						RenderServerNameEntry, 
+						RenderServerNameEntry,
+						RenderServerNameEntry, 
+						RenderServerNameEntry, 
+						RenderServerNameEntry, 
+						RenderServerNameEntry, 
+						RenderServerNameEntry, } )
     self.serverRowNames:SetTableData(rowNames)
     
     self.playWindow:AddEventCallbacks({
