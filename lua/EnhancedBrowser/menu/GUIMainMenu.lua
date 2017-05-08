@@ -26,9 +26,9 @@ function GUIMainMenu:CreateServerListWindow()
         "private",
         "servername",
         "game",
-        "rate", -- map
-        "players", --players
-	"rate", -- hive
+        "map",
+        "players",
+	"hive",
         "rate",
         "ping"
     }
