@@ -2041,7 +2041,7 @@ entry.active
   
 entry.favorite 
 { 
-    width: 3%; 
+    width: 5%; 
 } 
   
 entry.private 
@@ -2056,7 +2056,7 @@ entry.playerskill
   
 entry.servername 
 { 
-    width: 33%;
+    width: 38%;
 } 
   
 entry.game 
@@ -2076,7 +2076,7 @@ entry.players
   
 entry.rate
 { 
-    width: 6%;
+    width: 7%;
 }
 
 entry.rank
@@ -2086,12 +2086,12 @@ entry.rank
 
 entry.hive
 {
-	width: 10%;	
+	width: 9%;	
 }
 
 entry.ping 
 { 
-    width: 5%;
+    width: 7%;
 } 
   
 font.player_count_full 

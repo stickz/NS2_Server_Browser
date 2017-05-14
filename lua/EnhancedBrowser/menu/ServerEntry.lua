@@ -9,14 +9,11 @@ local kNonFavoriteTexture = PrecacheAsset("ui/menu/nonfavorite.dds")
 local kFavoriteMouseOverColor = Color(1,1,0,1)
 local kFavoriteColor = Color(1,1,1,0.9)
 
-local kPrivateIconSize = Vector(26, 26, 0)
-local kPrivateIconTexture = PrecacheAsset("ui/lock.dds")
-
 local kPingIconSize = Vector(37, 24, 0)
 local kPingIconTextures = {
     {60,  PrecacheAsset("ui/icons/ping_5.dds")},
     {110, PrecacheAsset("ui/icons/ping_4.dds")},
-    {160, PrecacheAsset("ui/icons/ping_3.dds")},
+    {180, PrecacheAsset("ui/icons/ping_3.dds")},
     {250, PrecacheAsset("ui/icons/ping_2.dds")},
     {999, PrecacheAsset("ui/icons/ping_1.dds")},
 }
@@ -31,7 +28,10 @@ local kSkillIconTextures = {
     PrecacheAsset("ui/menu/skill_high.dds")
 }
 
+local kOrange = Color(1, 0.6, 0)
+local kPink = Color(1, 0.4, 0.7)
 local kBlue = Color(0, 168/255 ,255/255)
+local kLBlue = Color (0.4, 1, 1)
 local kGreen = Color(0, 208/255, 103/255)
 local kYellow = kGreen --Color(1, 1, 0) --used for reserved full
 local kGold = kBlue --Color(212/255, 175/255, 55/255) --used for ranked
@@ -46,9 +46,13 @@ function ServerEntry:Initialize()
     self.serverName = CreateTextItem(self, true)
     self.mapName = CreateTextItem(self, true)
     self.mapName:SetTextAlignmentX(GUIItem.Align_Center)
+	
+	
     self.ping = CreateGraphicItem(self, true)
     self.ping:SetTexture(kPingIconTextures[1][2])
     self.ping:SetSize(kPingIconSize)
+	self.ping:SetTextAlignmentX(GUIItem.Align_Center)
+	
     self.tickRate = CreateGraphicItem(self, true)
     self.tickRate:SetTexture(kPerfIconTexture)
     self.tickRate:SetSize(kPerfIconSize)
@@ -59,9 +63,6 @@ function ServerEntry:Initialize()
 
     self.playerCount = CreateTextItem(self, true)
     self.playerCount:SetTextAlignmentX(GUIItem.Align_Center)
-
-    self.rank = CreateTextItem(self, true)
-    self.rank:SetTextAlignmentX(GUIItem.Align_Center)
     
     self.favorite = CreateGraphicItem(self, true)
     self.favorite:SetSize(kFavoriteIconSize)
@@ -69,12 +70,8 @@ function ServerEntry:Initialize()
     self.favorite:SetTexture(kNonFavoriteTexture)
     self.favorite:SetColor(kFavoriteColor)
     
-    self.private = CreateGraphicItem(self, true)
-    self.private:SetSize(kPrivateIconSize)
-    self.private:SetTexture(kPrivateIconTexture)
-	
-    self.hiveSkill = CreateTextItem(self, true)
-    self.hiveSkill:SetFontName(Fonts.kAgencyFB_Small)
+	self.hiveSkill = CreateTextItem(self, true)
+	self.hiveSkill:SetFontName(Fonts.kAgencyFB_Small)
     self.hiveSkill:SetTextAlignmentX(GUIItem.Align_Center)
     
     self:SetFontName(Fonts.kAgencyFB_Small)
@@ -187,10 +184,8 @@ function ServerEntry:SetFontName(fontName)
     self.modName:SetScale(GetScaledVector())
     self.playerCount:SetFontName(fontName)
     self.playerCount:SetScale(GetScaledVector())
-    self.rank:SetFontName(fontName)
-    self.rank:SetScale(GetScaledVector())
-    self.hiveSkill:SetFontName(fontName)
-    self.hiveSkill:SetScale(GetScaledVector())
+	self.hiveSkill:SetFontName(fontName)
+	self.hiveSkill:SetScale(GetScaledVector())
 end
 
 function ServerEntry:SetTextColor(color)
@@ -199,8 +194,6 @@ function ServerEntry:SetTextColor(color)
     self.mapName:SetColor(color)
     self.modName:SetColor(color)
     self.playerCount:SetColor(color)
-    self.rank:SetColor(color)
-
 end
 
 function ServerEntry:SetServerData(serverData)
@@ -218,13 +211,15 @@ function ServerEntry:SetServerData(serverData)
         else
             self.playerCount:SetColor(kWhite)
         end
-
-        self.rank:SetText(tostring(serverData.rank or 0))
      
         self.serverName:SetText(serverData.name)
         
-        if serverData.rookieOnly then
+		if serverData.requiresPassword then
+			self.serverName:SetColor(kOrange)
+        elseif serverData.rookieOnly then
             self.serverName:SetColor(kGreen)
+		elseif serverData.favorite then
+			self.serverName:SetColor(kPink)
         else
             self.serverName:SetColor(kWhite)
         end
@@ -238,39 +233,44 @@ function ServerEntry:SetServerData(serverData)
             end
         end
 		
-	-- Handle setting the hive skill column
-	if serverData.playerSkill ~= nil then
-	    local pSkill = serverData.playerSkill
+		-- Handle setting the hive skill column
+		if serverData.playerSkill ~= nil then
+			local pSkill = serverData.playerSkill
 			
-	    -- Only support ns2, ns2+ or ns2Large. Don't allow other custom gamemodes to break things
-	    if serverData.mode ~= "ns2" and serverData.mode ~= "ns2+" and serverData.mode ~= "ns2Large" then
-		self.hiveSkill:SetText(string.format("N/A"))					
-		self.hiveSkill:SetColor(Color(1, 1, 1))
-			
-            elseif pSkill <= 3 then
-		-- If the server fails to respond, try to use a previous value (if present)
-		if tonumber(self.hiveSkill:GetText()) == nil or serverData.numPlayers == 0 then
-			self.hiveSkill:SetText(string.format("N/A"))
-
-			if serverData.numPlayers == 0 then
+            -- Only support ns2, ns2+ or ns2Large. Don't allow other custom gamemodes to break things
+			if serverData.mode ~= "ns2" and serverData.mode ~= "ns2+" and serverData.mode ~= "ns2Large" then
+				self.hiveSkill:SetText(string.format("N/A"))					
 				self.hiveSkill:SetColor(Color(1, 1, 1))
-			end
-		end
+			
+			elseif pSkill <= 3 then
+				-- If the server fails to respond, try to use a previous value (if present)
+				if tonumber(self.hiveSkill:GetText()) == nil or serverData.numPlayers == 0 then
+					self.hiveSkill:SetText(string.format("N/A"))
+					
+					if serverData.numPlayers == 0 then
+						self.hiveSkill:SetColor(Color(1, 1, 1))
+					end
+				end
 				
-	    else -- the hive skill is greater than 0
-		self.hiveSkill:SetText(string.format("%d", pSkill))
-				
-		-- set percent of red to use
-		local hRed = 0 				
-		if pSkill > 1199 then hRed = 1 end
-				
-		-- set percent of green to use
-		local hGreen = 1 
-		if pSkill > 1999 then hGreen = 0 
-		elseif pSkill > 1649 then hGreen = 0.6 
-		else hGreen = 1 end
-						   
-		self.hiveSkill:SetColor(Color(hRed, hGreen, 0))
+			else
+				self.hiveSkill:SetText(string.format("%d", pSkill))				
+								
+				if pSkill < 2800 then
+					-- set percent of red to use				
+					local hRed = 0
+					if pSkill > 1199 then hRed = 1 end
+						
+					-- set percent of green to use
+					local hGreen = 1 
+					if pSkill > 1999 then hGreen = 0 
+					elseif pSkill > 1649 then hGreen = 0.6 
+					else hGreen = 1 end
+					
+					self.hiveSkill:SetColor(Color(hRed, hGreen, 0))
+					
+				else -- we're a competitive ranking					
+					self.hiveSkill:SetColor(kLBlue)
+				end
             end
         end			
         
@@ -279,9 +279,7 @@ function ServerEntry:SetServerData(serverData)
             -- Log("%s: score %s, q %s", serverData.name, serverData.performanceScore, serverData.performanceQuality)
         else
             self.tickRate:SetTexture(kPerfIconTexture)
-        end
-
-        self.private:SetIsVisible(serverData.requiresPassword)
+        end		
         
         self.modName:SetText(serverData.mode)
         self.modName:SetColor(kWhite)
@@ -320,24 +318,14 @@ function ServerEntry:SetWidth(width, isPercentage, time, animateFunc, callBack)
         -- We can use them here to set the position correctly instead of guessing like previously
         MenuElement.SetWidth(self, width, isPercentage, time, animateFunc, callBack)
         local currentPos = 0
-        local currentWidth = self.rank:GetSize().x
+        local currentWidth = self.favorite:GetSize().x
         local currentPercentage = width * 0.05
         local kPaddingSize = 4
 
-        self.rank:SetPosition(Vector((currentPos + currentPercentage/2 - currentWidth/2), 0, 0))
-
-        currentPos = currentPercentage + kPaddingSize
-        currentPercentage = width * 0.03
-        currentWidth = self.favorite:GetSize().x
         self.favorite:SetPosition(Vector((currentPos + currentPercentage/2 - currentWidth/2), GUIScale(2), 0))
 
-        currentPos = currentPos + currentPercentage + kPaddingSize
-        currentPercentage = width * 0.03
-        currentWidth = self.private:GetSize().x
-        self.private:SetPosition(Vector((currentPos + currentPercentage/2 - currentWidth/2), GUIScale(2), 0))
-        
-        currentPos = currentPos + currentPercentage + kPaddingSize
-        currentPercentage = width * 0.33 -- 8 percent off
+        currentPos = currentPos + currentPercentage + kPaddingSize + kPaddingSize
+        currentPercentage = width * 0.38
         self.serverName:SetPosition(Vector((currentPos + kPaddingSize), 0, 0))
         
         currentPos = currentPos + currentPercentage + kPaddingSize
@@ -351,13 +339,13 @@ function ServerEntry:SetWidth(width, isPercentage, time, animateFunc, callBack)
         self.mapName:SetPosition(Vector((currentPos + currentPercentage/2 - currentWidth/2), 0, 0))
         
         currentPos = currentPos + currentPercentage + kPaddingSize
-        currentPercentage = width * 0.11 -- 4 percent off
+        currentPercentage = width * 0.12 -- 2 percent off
         currentWidth = GUIScale(self.playerCount:GetTextWidth(self.playerCount:GetText()))
         self.playerCount:SetPosition(Vector((currentPos + currentPercentage/2 - currentWidth/2), 0, 0))
 		
-	currentPos = currentPos + currentPercentage + kPaddingSize
-        currentPercentage = width * 0.11
-	currentWidth = GUIScale(self.hiveSkill:GetTextWidth(self.hiveSkill:GetText()))
+		currentPos = currentPos + currentPercentage + kPaddingSize
+        currentPercentage = width * 0.09
+		currentWidth = GUIScale(self.hiveSkill:GetTextWidth(self.hiveSkill:GetText()))
         self.hiveSkill:SetPosition(Vector((currentPos + currentPercentage/2 - currentWidth/2), 0, 0))
         
         currentPos = currentPos + currentPercentage + kPaddingSize
@@ -366,7 +354,7 @@ function ServerEntry:SetWidth(width, isPercentage, time, animateFunc, callBack)
         self.tickRate:SetPosition(Vector((currentPos + currentPercentage/2 - currentWidth/2), 0, 0))
         
         currentPos = currentPos + currentPercentage + kPaddingSize
-        currentPercentage = width * 0.05
+        currentPercentage = width * 0.07
         currentWidth = GUIScaleWidth(60)
         self.ping:SetPosition(Vector((currentPos + currentPercentage/2 - currentWidth/2), 2, 0))
         
