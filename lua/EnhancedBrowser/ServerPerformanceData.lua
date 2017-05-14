@@ -17,10 +17,10 @@ function ServerPerformanceData.GetPerformanceIcon(quality, score)
     local score = score * quality / kServerPerformanceDataUnknownQualityCutoff
     local result = score <= kLoaded and kPerfIconIcons[3] or score <= kOk and kPerfIconIcons[2] or kPerfIconIcons[1]
 	
-	-- Fix for unknown performance ratings, so they're not rated red
-	if quality < kServerPerformanceDataUnknownQualityCutoff then
-		result = kPerfIconIcons[2]
-	end
+    -- Fix for unknown performance ratings, so they're not rated red
+    if quality < kServerPerformanceDataUnknownQualityCutoff then
+	result = kPerfIconIcons[2]
+    end
 
     if dbgServerPerfData then
         Log("PerfText: Quality %s, Score %s, result %s", quality, score, result)
@@ -33,7 +33,7 @@ end
 -- of the text will still indicate score)
 function ServerPerformanceData.GetPerformanceText(quality, score)
     local result = Locale.ResolveString("SERVER_PERF_UNKNOWN")
-	local score = score * quality / kServerPerformanceDataUnknownQualityCutoff
+    local score = score * quality / kServerPerformanceDataUnknownQualityCutoff
     if quality >= kServerPerformanceDataUnknownQualityCutoff then
         result = Locale.ResolveString(
             ( score <= kLoaded and "SERVER_PERF_BAD" or
