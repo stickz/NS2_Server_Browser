@@ -10,16 +10,13 @@ local kFavoriteMouseOverColor = Color(1,1,0,1)
 local kFavoriteColor = Color(1,1,1,0.9)
 
 local kPingIconSize = Vector(37, 24, 0)
-local kPingIconTextures = {
-    {60,  PrecacheAsset("ui/icons/ping_5.dds")},
-    {110, PrecacheAsset("ui/icons/ping_4.dds")},
-    {180, PrecacheAsset("ui/icons/ping_3.dds")},
-    {250, PrecacheAsset("ui/icons/ping_2.dds")},
-    {999, PrecacheAsset("ui/icons/ping_1.dds")},
-}
+local defaultPing = PrecacheAsset("ui/icons/ping_3.dds")
 
 local kPerfIconSize = Vector(26, 26, 0)
-local kPerfIconTexture = PrecacheAsset("ui/icons/smiley_meh.dds")
+local kPerfIconMeh = PrecacheAsset("ui/icons/smiley_meh.dds")
+local kPrefIconGood = PrecacheAsset("ui/icons/smiley_good.dds")
+local kPrefIconBad = PrecacheAsset("ui/icons/smiley_bad.dds")
+
 
 local kSkillIconSize = Vector(26, 26, 0)
 local kSkillIconTextures = {
@@ -45,16 +42,15 @@ function ServerEntry:Initialize()
     
     self.serverName = CreateTextItem(self, true)
     self.mapName = CreateTextItem(self, true)
-    self.mapName:SetTextAlignmentX(GUIItem.Align_Center)
-	
+    self.mapName:SetTextAlignmentX(GUIItem.Align_Center)	
 	
     self.ping = CreateGraphicItem(self, true)
-    self.ping:SetTexture(kPingIconTextures[1][2])
+    self.ping:SetTexture(defaultPing)
     self.ping:SetSize(kPingIconSize)
 	self.ping:SetTextAlignmentX(GUIItem.Align_Center)
 	
     self.tickRate = CreateGraphicItem(self, true)
-    self.tickRate:SetTexture(kPerfIconTexture)
+    self.tickRate:SetTexture(kPrefIconGood)
     self.tickRate:SetSize(kPerfIconSize)
 
     self.modName = CreateTextItem(self, true)
@@ -203,35 +199,26 @@ function ServerEntry:SetServerData(serverData)
     if self.serverData ~= serverData then
     
         local numReservedSlots = GetNumServerReservedSlots(serverData.serverId)
-        self.playerCount:SetText(string.format("%d/%d", serverData.numPlayers, (serverData.maxPlayers - numReservedSlots)))
-        if serverData.numPlayers >= serverData.maxPlayers then
-            self.playerCount:SetColor(kRed)
-        elseif serverData.numPlayers >= serverData.maxPlayers - numReservedSlots then
-            self.playerCount:SetColor(kYellow)
-        else
-            self.playerCount:SetColor(kWhite)
-        end
+		local slotsLeft = serverData.maxPlayers - numReservedSlots
+		
+        self.playerCount:SetText(string.format("%d/%d", serverData.numPlayers, slotsLeft))
+		
+		-- Set colour of player count
+		self.playerCount:SetColor( serverData.numPlayers >= serverData.maxPlayers and kRed or
+								   serverData.numPlayers >= slotsLeft and kYellow or kWhite )
      
-        self.serverName:SetText(serverData.name)
-        
-		if serverData.requiresPassword then
-			self.serverName:SetColor(kOrange)
-        elseif serverData.rookieOnly then
-            self.serverName:SetColor(kGreen)
-		elseif serverData.favorite then
-			self.serverName:SetColor(kPink)
-        else
-            self.serverName:SetColor(kWhite)
-        end
+        self.serverName:SetText(serverData.name)		
+							
+		-- Set colour of server name
+		self.serverName:SetColor(	serverData.requiresPassword and kOrange or
+									serverData.rookieOnly and kGreen or
+									serverData.favorite and kPink or kWhite )		
         
         self.mapName:SetText(serverData.map)
         
-        for _, pingTexture in ipairs(kPingIconTextures) do
-            if serverData.ping < pingTexture[1] then
-                self.ping:SetTexture(pingTexture[2])
-                break
-            end
-        end
+		-- Set actual ping and set the ping texture
+		local actualPing = ServerPerformanceData.GetLatency(serverData.ping, serverData.performanceQuality, serverData.performanceScore)
+        self.ping:SetTexture(ServerPerformanceData.GetPingIcon(actualPing, serverData.performanceQuality, serverData.performanceScore))
 		
 		-- Handle setting the hive skill column
 		if serverData.playerSkill ~= nil then
@@ -257,58 +244,43 @@ function ServerEntry:SetServerData(serverData)
 								
 				if pSkill < 2800 then
 					-- set percent of red to use				
-					local hRed = 0
-					if pSkill > 1199 then hRed = 1 end
-						
-					-- set percent of green to use
-					local hGreen = 1 
-					if pSkill > 1999 then hGreen = 0 
-					elseif pSkill > 1649 then hGreen = 0.6 
-					else hGreen = 1 end
-					
+					local hRed = pSkill > 1199 and 1 or 0		
+					local hGreen = pSkill > 1999 and 0 or pSkill > 1649 and 0.6 or 1
+ 					
 					self.hiveSkill:SetColor(Color(hRed, hGreen, 0))
 					
 				else -- we're a competitive ranking					
 					self.hiveSkill:SetColor(kLBlue)
 				end
             end
-        end			
+        end	
         
-        if serverData.performanceScore ~= nil then
-            self.tickRate:SetTexture(ServerPerformanceData.GetPerformanceIcon(serverData.performanceQuality, serverData.performanceScore))
-            -- Log("%s: score %s, q %s", serverData.name, serverData.performanceScore, serverData.performanceQuality)
-        else
-            self.tickRate:SetTexture(kPerfIconTexture)
-        end		
+		
+		-- Set texture of performance icon, if performance score is available
+		if serverData.performanceScore ~= nil then			
+			self.tickRate:SetTexture(ServerPerformanceData.GetPerformanceIcon(serverData.numPlayers, serverData.performanceQuality, serverData.performanceScore))	
+		end
         
         self.modName:SetText(serverData.mode)
-        self.modName:SetColor(kWhite)
-        self.modName.tooltipText = nil
 
+		-- Set colour and tooltip of gamemode name
         if serverData.mode == "ns2" and serverData.ranked then
             self.modName:SetColor(kGold)
-            self.modName.tooltipText = Locale.ResolveString(string.format("SERVERBROWSER_RANKED_TOOLTIP"))
+            self.modName.tooltipText = rankedToolTip
+		else
+			self.modName:SetColor(kWhite)
+			self.modName.tooltipText = nil
         end
         
-        if serverData.favorite then
-            self.favorite:SetTexture(kFavoriteTexture)
-        else
-            self.favorite:SetTexture(kNonFavoriteTexture)
-        end
-        
-        local skillColor = kGreen
-        local skillAngle = 0
-        local skillTextureId = 1
-        local toolTipId = 1
+        -- Is the server one of our favourites?
+		self.favorite:SetTexture( serverData.favorite and kFavoriteTexture or kNonFavoriteTexture )
         
         self:SetId(serverData.serverId)
         self.serverData = { }
         for name, value in pairs(serverData) do
             self.serverData[name] = value
-        end
-        
-    end
-    
+        end        
+    end    
 end
 
 function ServerEntry:SetWidth(width, isPercentage, time, animateFunc, callBack)

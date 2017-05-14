@@ -1,3 +1,24 @@
+local columnClassNames =
+{
+	"favorite",
+	"servername",
+	"game",
+	"map",
+	"players",
+	"hive",
+	"rate",
+	"ping"
+}
+    
+local rowNames = { {Locale.ResolveString("SERVERBROWSER_FAVORITE"), 
+					Locale.ResolveString("SERVERBROWSER_NAME"), 
+					Locale.ResolveString("SERVERBROWSER_GAME"), 
+					Locale.ResolveString("SERVERBROWSER_MAP"), 
+					Locale.ResolveString("SERVERBROWSER_PLAYERS"),
+					"HIVE",
+					Locale.ResolveString("SERVERBROWSER_PERF"), 
+					Locale.ResolveString("SERVERBROWSER_PING") } }
+
 function GUIMainMenu:CreateServerListWindow()
 
     self.highlightServer = CreateMenuElement(self.playWindow:GetContentBox(), "Image")
@@ -17,31 +38,6 @@ function GUIMainMenu:CreateServerListWindow()
     
     self.serverRowNames = CreateMenuElement(self.playWindow, "Table")
     self.serverList = CreateMenuElement(self.playWindow:GetContentBox(), "ServerList")
-    
-    local columnClassNames =
-    {
-        "favorite",
-        "servername",
-        "game",
-        "map",
-        "players",
-<<<<<<< HEAD
-		"hive",
-=======
-	"hive",
->>>>>>> origin/master
-        "rate",
-        "ping"
-    }
-    
-    local rowNames = { {Locale.ResolveString("SERVERBROWSER_FAVORITE"), 
-						Locale.ResolveString("SERVERBROWSER_NAME"), 
-						Locale.ResolveString("SERVERBROWSER_GAME"), 
-						Locale.ResolveString("SERVERBROWSER_MAP"), 
-						Locale.ResolveString("SERVERBROWSER_PLAYERS"),
-						"HIVE",
-						Locale.ResolveString("SERVERBROWSER_PERF"), 
-						Locale.ResolveString("SERVERBROWSER_PING") } }
     
     local serverList = self.serverList
 
