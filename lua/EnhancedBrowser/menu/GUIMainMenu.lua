@@ -25,7 +25,11 @@ function GUIMainMenu:CreateServerListWindow()
         "game",
         "map",
         "players",
+<<<<<<< HEAD
 		"hive",
+=======
+	"hive",
+>>>>>>> origin/master
         "rate",
         "ping"
     }
