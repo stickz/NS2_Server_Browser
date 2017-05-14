@@ -39,6 +39,30 @@ function GUIMainMenu:CreateServerListWindow()
     self.serverRowNames = CreateMenuElement(self.playWindow, "Table")
     self.serverList = CreateMenuElement(self.playWindow:GetContentBox(), "ServerList")
     
+<<<<<<< HEAD
+=======
+    local columnClassNames =
+    {
+        "favorite",
+        "servername",
+        "game",
+        "map",
+        "players",
+	"hive",
+        "rate",
+        "ping"
+    }
+    
+    local rowNames = { {Locale.ResolveString("SERVERBROWSER_FAVORITE"), 
+						Locale.ResolveString("SERVERBROWSER_NAME"), 
+						Locale.ResolveString("SERVERBROWSER_GAME"), 
+						Locale.ResolveString("SERVERBROWSER_MAP"), 
+						Locale.ResolveString("SERVERBROWSER_PLAYERS"),
+						"HIVE",
+						Locale.ResolveString("SERVERBROWSER_PERF"), 
+						Locale.ResolveString("SERVERBROWSER_PING") } }
+    
+>>>>>>> origin/master
     local serverList = self.serverList
 
     --Default sorting
