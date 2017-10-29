@@ -59,6 +59,9 @@ function ServerEntry:Initialize()
 
     self.playerCount = CreateTextItem(self, true)
     self.playerCount:SetTextAlignmentX(GUIItem.Align_Center)
+	
+	self.spectatorCount = CreateTextItem(self, true)
+    self.spectatorCount:SetTextAlignmentX(GUIItem.Align_Center)
     
     self.favorite = CreateGraphicItem(self, true)
     self.favorite:SetSize(kFavoriteIconSize)
@@ -180,6 +183,8 @@ function ServerEntry:SetFontName(fontName)
     self.modName:SetScale(GetScaledVector())
     self.playerCount:SetFontName(fontName)
     self.playerCount:SetScale(GetScaledVector())
+	self.spectatorCount:SetFontName(fontName)
+    self.spectatorCount:SetScale(GetScaledVector())
 	self.hiveSkill:SetFontName(fontName)
 	self.hiveSkill:SetScale(GetScaledVector())
 end
@@ -190,6 +195,7 @@ function ServerEntry:SetTextColor(color)
     self.mapName:SetColor(color)
     self.modName:SetColor(color)
     self.playerCount:SetColor(color)
+	self.spectatorCount:SetColor(color)
 end
 
 function ServerEntry:SetServerData(serverData)
@@ -207,7 +213,11 @@ function ServerEntry:SetServerData(serverData)
 		self.playerCount:SetColor( serverData.numPlayers >= serverData.maxPlayers and kRed or
 								   serverData.numPlayers >= slotsLeft and kYellow or kWhite )
      
-        self.serverName:SetText(serverData.name)		
+		-- Set colour of spectator count
+        self.spectatorCount:SetText(string.format("%d/%d", serverData.numSpectators, serverData.maxSpectators ))
+        self.spectatorCount:SetColor( serverData.numSpectators >= serverData.maxSpectators and kRed or kWhite)
+
+		self.serverName:SetText(serverData.name)		
 							
 		-- Set colour of server name
 		self.serverName:SetColor(	serverData.requiresPassword and kOrange or
@@ -229,7 +239,7 @@ function ServerEntry:SetServerData(serverData)
 				self.hiveSkill:SetText(string.format("N/A"))					
 				self.hiveSkill:SetColor(Color(1, 1, 1))
 			
-			elseif pSkill <= 3 then
+			elseif pSkill <= 3 or serverData.numPlayers == 0 then
 				-- If the server fails to respond, try to use a previous value (if present)
 				if tonumber(self.hiveSkill:GetText()) == nil or serverData.numPlayers == 0 then
 					self.hiveSkill:SetText(string.format("N/A"))
@@ -240,17 +250,22 @@ function ServerEntry:SetServerData(serverData)
 				end
 				
 			else
-				self.hiveSkill:SetText(string.format("%d", pSkill))				
-								
-				if pSkill < 2800 then
+				if pSkill <= 2800 then
 					-- set percent of red to use				
 					local hRed = pSkill > 1199 and 1 or 0		
 					local hGreen = pSkill > 1999 and 0 or pSkill > 1649 and 0.6 or 1
  					
 					self.hiveSkill:SetColor(Color(hRed, hGreen, 0))
+					self.hiveSkill:SetText(string.format("%.0f", pSkill))
 					
-				else -- we're a competitive ranking					
+				elseif pSkill >= 2800 then 
+					-- we're a competitive ranking					
 					self.hiveSkill:SetColor(kLBlue)
+					self.hiveSkill:SetText(string.format("%.0f", pSkill))
+				else
+					-- we're not anything
+					self.hiveSkill:SetText(string.format("N/A"))
+					self.hiveSkill:SetColor(Color(1, 1, 1))
 				end
             end
         end	
@@ -258,7 +273,7 @@ function ServerEntry:SetServerData(serverData)
 		
 		-- Set texture of performance icon, if performance score is available
 		if serverData.performanceScore ~= nil then			
-			self.tickRate:SetTexture(ServerPerformanceData.GetPerformanceIcon(serverData.numPlayers, serverData.performanceQuality, serverData.performanceScore))	
+			self.tickRate:SetTexture(ServerPerformanceData.GetPerformanceIcon(serverData.performanceQuality, serverData.performanceScore))
 		end
         
         self.modName:SetText(serverData.mode)
@@ -297,7 +312,7 @@ function ServerEntry:SetWidth(width, isPercentage, time, animateFunc, callBack)
         self.favorite:SetPosition(Vector((currentPos + currentPercentage/2 - currentWidth/2), GUIScale(2), 0))
 
         currentPos = currentPos + currentPercentage + kPaddingSize + kPaddingSize
-        currentPercentage = width * 0.38
+        currentPercentage = width * 0.33 -- 5 percent off
         self.serverName:SetPosition(Vector((currentPos + kPaddingSize), 0, 0))
         
         currentPos = currentPos + currentPercentage + kPaddingSize
@@ -311,9 +326,14 @@ function ServerEntry:SetWidth(width, isPercentage, time, animateFunc, callBack)
         self.mapName:SetPosition(Vector((currentPos + currentPercentage/2 - currentWidth/2), 0, 0))
         
         currentPos = currentPos + currentPercentage + kPaddingSize
-        currentPercentage = width * 0.12 -- 2 percent off
+        currentPercentage = width * 0.10 -- 4 percent off
         currentWidth = GUIScale(self.playerCount:GetTextWidth(self.playerCount:GetText()))
         self.playerCount:SetPosition(Vector((currentPos + currentPercentage/2 - currentWidth/2), 0, 0))
+		
+		currentPos = currentPos + currentPercentage + kPaddingSize
+        currentPercentage = width * 0.07
+        currentWidth = GUIScale(self.spectatorCount:GetTextWidth(self.spectatorCount:GetText()))
+        self.spectatorCount:SetPosition(Vector((currentPos + currentPercentage/2 - currentWidth/2), 0, 0))
 		
 		currentPos = currentPos + currentPercentage + kPaddingSize
         currentPercentage = width * 0.09

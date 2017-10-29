@@ -1,6 +1,8 @@
 local kLoaded = 14
 local kBad = 7
 
+local kOffset = kLoaded + 2
+
 -- require a quality score of 50 to stop displaying unknown in text
 -- actual score is still indicated by color
 kServerPerformanceDataUnknownQualityCutoff = 50
@@ -23,16 +25,10 @@ local kNormalPingPattern = { 60, 110, 180, 250,	999 }
 local kLoadedPingPattern = { 55, 100, 165, 225, 999 }
 local kBadPingPattern = { 50, 90, 150, 200, 999 }
 
-function ServerPerformanceData.GetPerformanceIcon(numPlayers, quality, score)
+function ServerPerformanceData.GetPerformanceIcon(quality, score)
 
 	if quality >= kServerPerformanceDataUnknownQualityCutoff then
 		local score = score * quality / kServerPerformanceDataUnknownQualityCutoff
-		
-		-- Default to bad if server is loaded and not populated
-		if numPlayers < 4 and score <= kLoaded then
-			return kPerfIconIcons[3]		
-		end		
-		
 		return score <= kBad and kPerfIconIcons[3] or score <= kLoaded and kPerfIconIcons[2] or kPerfIconIcons[1]
 	end
 
@@ -42,6 +38,7 @@ end
 -- return Unknown if quality is below cutoff (before that, the color
 -- of the text will still indicate score)
 function ServerPerformanceData.GetPerformanceText(quality, score)
+
      if quality >= kServerPerformanceDataUnknownQualityCutoff then
         local score = score * quality / kServerPerformanceDataUnknownQualityCutoff
 		return 	 score <= kBad 	  and	Locale.ResolveString("SERVER_PERF_BAD") 	or
@@ -53,17 +50,29 @@ function ServerPerformanceData.GetPerformanceText(quality, score)
 end
 
 function ServerPerformanceData.GetLatency(ping, quality, score)
-	local score = score * quality / kServerPerformanceDataUnknownQualityCutoff
-	return score <= kLoaded and (ping + 30) or score <= kBad and (ping + 50) or ping
+	local newPing = ping
+	
+	if quality >= kServerPerformanceDataUnknownQualityCutoff then
+		local score = score * quality / kServerPerformanceDataUnknownQualityCutoff
+		
+		if score < kOffset then
+			newPing = ping + (0.008 * math.pow(ping, 1.8) + kOffset)
+		end
+	end
+	
+	return newPing
 end
 
 function ServerPerformanceData.GetPingIcon(ping, quality, score)
-    local score = score * quality / kServerPerformanceDataUnknownQualityCutoff
-	local array =    score <= kLoaded and kLoadedPingPattern or 
-					 score <= kBad and kBadPingPattern or kNormalPingPattern	
+	local array = kNormalPingPattern
+					 
+	if quality >= kServerPerformanceDataUnknownQualityCutoff then
+		local score = score * quality / kServerPerformanceDataUnknownQualityCutoff
+		array =    	score <= kLoaded and kLoadedPingPattern or 
+					score <= kBad and kBadPingPattern or kNormalPingPattern		
+	end
 		
-	local pingTexture = nil
-	
+	local pingTexture = nil	
 	for k, v in ipairs(array) do
 		if ping < v then
 			pingTexture = kPingIconTextures[k]

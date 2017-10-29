@@ -1,5 +1,3 @@
-css = [[ 
-
 slidebar {
     border-width: 0px; 
     background-color: #000; 
@@ -214,6 +212,93 @@ progressentry font.text
     top: 60px;
     text-color: #62DFE5;
 }
+
+endlifewarn
+{
+    scaling: true;
+    width: 600px;
+    height: 400px;
+    left: -300px;
+    top: -225px;
+    vertical-align: center;
+    horizontal-align: center;
+
+    border-width: 1px;
+    border-color: #4f7e91;
+
+    background-color: rgba(0.1, 0.1, 0.1, 0.95);
+    opacity: 0.92;
+}
+
+endlifewarn titlebar
+{
+    width: 600px;
+    height: 55px;
+
+    font-name: fonts/AgencyFB_medium.fnt;
+
+    border-width: 1px;
+    border-color: #4F7E91;
+
+    background-image: path(ui/menu/serverbrowser/menubackground.dds);
+    background-color: #ffffff;
+}
+
+endlifewarn titlebar font.title
+{
+    text-color: #4F7E91;
+
+    left: 5px;
+    
+    height: 30px;
+    text-padding: 2px;
+    text-align: left;
+
+    opacity: 0;
+}
+
+endlifewarn font.warning
+{
+    width: 600px;
+    height: 42px;
+    top: 64px;
+    left: 10px;
+    opacity: 0;
+    text-color: #CBD9E4;
+    font-name: fonts/AgencyFB_medium.fnt;
+}
+
+endlifewarn .ackbtn
+{
+    width: 200px;
+    height: 60px;
+    bottom: 16px;
+    left: 200px;
+    text-padding: 2px;
+    text-align: center;
+    text-color: #62DFE5;
+    font-name: fonts/AgencyFB_medium.fnt;
+    border-width: 1px;
+    border-color: #4F7E91;
+    background-image: path(ui/menu/serverbrowser/menubackground.dds);
+    background-color: #ffffff;
+}
+endlifewarn .ackbtn_hover
+{
+    width: 200px;
+    height: 60px;
+    bottom: 16px;
+    left: 200px;
+    text-padding: 2px;
+    text-align: center;
+    text-color: #ff7526;
+    font-name: fonts/AgencyFB_medium.fnt;
+    border-width: 1px;
+    border-color: #CBD9E4;
+    background-image: path(ui/menu/serverbrowser/menubackground.dds);
+    background-color: #ffffff;
+}
+
 
 changelog
 {
@@ -670,7 +755,7 @@ window.serverdetails_window content
 slidebar.window_scroller_playernames
 {
     scaling: true;
-    height: 380px;
+    height: 340px;
     width: 28px;
     bottom: 125px;
     right: 6px;
@@ -743,7 +828,7 @@ window.main_frame image.menu_bg_show
   
     left: 0px; 
     width: 630; 
-    height: 655; 
+    height: 700; 
       
     vertical-align: center; 
     top: -60%px; 
@@ -963,7 +1048,7 @@ window.main_frame image link
     background-image: path(ui/menu/link_bg.dds) pixelCoords(0, 0, 400, 32); 
 } 
   
-link.mainmenu font
+link.mainmenu font, link.play_button font
 { 
     right: 440px; 
     hover-background-color: rgba(1,1,1,1); 
@@ -972,10 +1057,15 @@ link.mainmenu font
     text-padding-bottom: 4px; 
     text-padding-left: 50px; 
     text-padding-right: 50px; 
-    font-name: fonts/AgencyFB_large.fnt; 
+    font-name: fonts/AgencyFB_large.fnt;
     hover-text-color: rgb(0.49, 0.9, 0.98); 
       
     text-align: center; 
+}
+
+link.play_button
+{
+    font-name: fonts/AgencyFBBold_huge.fnt;
 }
 
 image.link_glow, image.link_alert_glow
@@ -1104,24 +1194,24 @@ window.customize_window
 
 .customize_left
 {
-    top: 10%;
-    height: 60%;
+    top: 5%;
+    height: 85%;
     width: 300px;
     vertical-align: top;
     left: 80px;
     border-width: 2px; 
-    border-color: rgb(0.51, 0.62, 0.63); 
+    border-color: rgb(0.51, 0.62, 0.63, 0.15);
 }
 
 .customize_right
 {
-    top: 10%;
-    height: 60%;
+    top: 5%;
+    height: 50%;
     width: 300px;
     vertical-align: top;
     right: 80px;
     border-width: 2px; 
-    border-color: rgb(0.901, 0.623, 0.215); 
+    border-color: rgb(0.901, 0.623, 0.215, 0.15);
 }
 
 .customize_slider
@@ -1183,10 +1273,10 @@ button.customize_badges
     horizontal-align: left; 
     font-name: fonts/AgencyFB_small.fnt; 
     text-color: #8bb4c1; 
-    text-padding: 16px;  
-    bottom: 250px;
+    text-padding: 16px;
+    bottom: 80px;
     left: 101px; 
-}  
+}
 
 form .customize_input 
 { 
@@ -1237,10 +1327,14 @@ window.passwordprompt_window
     left: -200px; 
     top: -100px; 
     vertical-align: center; 
-    horizontal-align: center; 
-    border-width: 0px; 
-    background-color: rgba(0.3, 0.3, 0.3, 0.75); 
-} 
+    horizontal-align: center;
+
+    background-color: #0c0F10;
+    opacity: 0.85;
+
+    border-width: 1px;
+    border-color: #4F7E91;
+}
   
 window.serverdetails_window font 
 { 
@@ -1263,8 +1357,7 @@ window.serverdetails_window
     left: -300px; 
     top: -400px; 
     vertical-align: center; 
-    horizontal-align: center; 
-    border-width: 0px;
+    horizontal-align: center;
 
     background-color: #0c0F10;
     opacity: 0.85;
@@ -1277,7 +1370,7 @@ window.serverdetails_window
 window.autojoin_window 
 { 
     scaling: true; 
-    width: 400px; 
+    width: 500px; 
     height: 280px; 
     left: -200px; 
     top: -100px; 
@@ -1526,8 +1619,14 @@ font.dontshowagain
   
 window.passwordprompt_window titlebar 
 { 
-    height: 36px; 
-} 
+    height: 36px;
+
+    background-image: path(ui/menu/serverbrowser/rownamesbackground.dds);
+    opacity: 1;
+
+    border-width: 1px;
+    border-color: #4F7E91;
+}
   
 window.autojoin_window titlebar 
 { 
@@ -1540,29 +1639,31 @@ window.passwordprompt_window form
     top: 32px; 
 } 
   
-window.passwordprompt_window titlebar button 
-{ 
-  
-    height: 32px; 
-    width: 32px; 
-    border-color: #FFFFFF; 
-      
-} 
+window.passwordprompt_window titlebar button.close {
+    background-image: path(ui/menu/serverbrowser/close.dds);
+    background-color: #ebebeb;
+    opacity: 1;
+
+    border-width: 0px;
+    width: 32px;
+    height: 32px;
+    right: 0
+}
   
 form textinput.serverpassword 
 { 
     top: 30px; 
-    width: 300px; 
-    horizontal-align: center; 
-    left: -150px; 
-} 
+    width: 350px;
+    left: 25px; 
+}
   
 font.passwordprompt_title 
 { 
-    text-color: #CCCCCC; 
-    font-name: fonts/AgencyFB_small.fnt; 
-    opacity: 0; 
-    left: 30px; 
+    text-color: #8bb4c1;
+    font-name: fonts/AgencyFB_medium.fnt;
+    opacity: 0;
+    text-padding: 2px;
+    left:10px;
 } 
   
 window.main_menu_window titlebar 
@@ -1649,7 +1750,7 @@ button.bottomcenter
     text-color: #8bb4c1; 
     text-padding: 16px; 
       
-    bottom: 0px; 
+    bottom: 20px; 
     left: -128px; 
 } 
   
@@ -1799,7 +1900,27 @@ button.getmods
       
     bottom: 0px; 
     left: 0px; 
-} 
+}
+
+button.displaypassword_toggle
+{
+    height: 48px; 
+    width: 48px;
+
+    border-width: 0px;
+    border-color: #9E9E9E;
+
+    top: 30px; 
+    right: 24px;
+	
+    background-image: path(ui/menu/serverbrowser/eye.dds);
+    background-color: #4F7E91;
+    hover-background-color: #8bb4c1;
+
+    font-name: fonts/AgencyFB_large.fnt; 
+    text-color: #8bb4c1; 
+    text-padding: 16px; 
+}
   
 window content 
 { 
@@ -1816,15 +1937,15 @@ window content
 } 
   
 window.serverdetails_window content 
-{ 
-    top: 235px;
+{
+    top: 307px;
     border-width: 1px; 
     border-color: rgb(0.2, 0.2, 0.2); 
     opacity: 0.6; 
       
     left: 20px;
     width: 530px;
-    height: 392px;
+    height: 320px;
       
 }
 
@@ -2056,7 +2177,7 @@ entry.playerskill
   
 entry.servername 
 { 
-    width: 38%;
+    width: 33%;
 } 
   
 entry.game 
@@ -2071,8 +2192,13 @@ entry.map
   
 entry.players 
 { 
-    width: 12%; 
-} 
+    width: 10%; 
+}
+
+entry.spectators
+{
+    width: 7%;
+}
   
 entry.rate
 { 
@@ -2789,6 +2915,7 @@ form.filter_form slidebar
     left: 508px;
 }
 
+
 .filter_passworded
 {
     top: 5px;
@@ -3030,7 +3157,7 @@ font.bot_note
 
 .tutorial_menu {
     width: 350px;
-    height: 672px;
+    height: 772px;
 
     background-color: #0c0F10;
     opacity: 0.90;
@@ -3042,7 +3169,7 @@ font.bot_note
 .tutorial_body {
     left: 350px;
     width: 600px;
-    height: 672px;
+    height: 772px;
 
     background-color: #0c0F10;
     opacity: 0.85;
@@ -3093,7 +3220,7 @@ font.bot_note
 
 }
 
-button.play_tutorial1, button.play_tutorial2, button.play_tutorial3, button.play_tutorial4, button.play_sandbox, button.replay_intro_video, button.play_hive_challenge
+button.play_tutorial1, button.play_tutorial2, button.play_tutorial3, button.play_tutorial4, button.play_sandbox, button.replay_intro_video, button.play_hive_challenge, button.play_skulk_challenge
 {
     font-name: fonts/AgencyFB_medium.fnt; 
     text-color: #4F7E91;
@@ -3138,6 +3265,11 @@ button.play_sandbox
 button.play_hive_challenge
 {
     background-image: path(ui/menu/hive_challenge_button.dds)
+}
+
+button.play_skulk_challenge
+{
+    background-image: path(ui/menu/skulk_challenge_button.dds)
 }
 
 
@@ -3204,7 +3336,7 @@ form.tutorial_footer_bg
 {
     width: 100%;
     height: 64px;
-    top: 672px;
+    top: 772px;
 
     border-color: #4F7E91;
     border-width: 1px;
@@ -3277,6 +3409,24 @@ image.small_highlight
 {
     background-image: path(ui/menu/small_button_highlight.dds);
     width: 300px;
+}
+
+font.play_skulk_challenge
+{
+    font-name: fonts/AgencyFB_medium.fnt; 
+    text-color: #8bb4c1; 
+    text-align: center;
+    background-color: rgba(0,0,0,0);
+    
+    text-padding: 0px;
+    height: 100px;
+    width: 400px;
+    left: 0px;
+    top: -16px;
+    border-width: 0px;
+    
+    vertical-align: center;
+    horizontal-align: center;
 }
 
 font.play_hive_challenge
@@ -3358,77 +3508,152 @@ font.sandbox_note
     top: 80px; 
 }
   
-window.first_run_window, window.tutnag_window, window.tundra_window
-{ 
-    scaling: true; 
-    width: 600px; 
-    height: 250px; 
-    left: -300px; 
-    top: -125px; 
-    vertical-align: center; 
-    horizontal-align: center; 
-    border-width: 0px; 
-    background-color: rgba(0.15, 0.15, 0.15, 0.85); 
-      
-} 
-font.first_run_msg, font.tundra_msg, font.credits_text
-{ 
-    text-color: #CCCCCC; 
-    font-name: fonts/AgencyFB_small.fnt; 
-    opacity: 0; 
-    horizontal-align: left; 
-    text-align: left; 
-    top: 20px; 
-    text-padding: 20px; 
-} 
-  
-button.first_run_ok, button.first_run_skip, button.tutnag_later, button.tundra_open, button.tundra_later, button.tutnag_stop, button.tutnag_play, button.tutnag_playnow
-{ 
-    font-name: fonts/AgencyFB_small.fnt; 
-    text-color: #8bb4c1; 
-    text-padding: 10px; 
-    border-width: 0px;     
-  
-    height: 58px; 
-  
-    horizontal-align: center; 
-    width: 200px; 
-    left: -100px; 
+window.first_run_window, window.nag_window, window.tundra_window, window.forge_window, window.nocturne_window
+{
+    scaling: true;
+    width: 600px;
+    height: 250px;
+    left: -300px;
+    top: -125px;
+    vertical-align: center;
+    horizontal-align: center;
+    border-width: 0px;
+    background-color: rgba(0.1, 0.1, 0.1, 0.95);
 }
-  
+
+window.tundra_window, window.forge_window, window.nocturne_window
+{
+    width: 670px;
+    height: 225px;
+}
+
+font.nag_msg, font.tundra_msg, font.forge_msg, font.nocturne_msg, font.credits_text
+{
+    horizontal-align: left;
+    text-align: left;
+
+    top: 50px;
+    text-padding: 20px;
+
+    font-name: fonts/Arial_17.fnt;
+    text-color: #B4B4B4;
+
+    background-color: rgba(1,1,1,0);
+}
+
+image.tundra_icon
+{
+    top: 10px;
+    left: 10px;
+    height: 192px;
+    width: 192px;
+
+    background-image: path(ui/logo_tundra.dds)
+}
+
+image.nocturne_icon
+{
+    top: 10px;
+    left: 10px;
+    height: 192px;
+    width: 192px;
+
+    background-image: path(ui/logo_nocturne.dds)
+}
+
+image.forge_icon
+{
+    top: 10px;
+    left: 10px;
+    height: 192px;
+    width: 192px;
+
+    background-image: path(ui/logo_forge.dds)
+}
+
+font.nag_title, font.tundra_title, font.forge_title, font.nocturne_title
+{
+    top: 15px;
+    left: 20px;
+
+    font-name: fonts/AgencyFB_medium.fnt;
+
+    height: 20px;
+    text-color: #0FBAE5;
+
+    background-color: rgba(1,1,1,0);
+}
+
+font.tundra_msg, font.tundra_title, font.forge_msg, font.forge_title, font.nocturne_msg, font.nocturne_title
+{
+    left: 220px;
+}
+
+button.first_run_ok, button.first_run_skip, button.tutnag_later, button.tundra_open,
+button.tundra_later, button.forge_open, button.forge_later, button.nocturne_open,
+button.nocturne_later, button.tutnag_stop, button.tutnag_play, button.tutnag_playnow
+{
+    height: 50px;
+    width: 200px;
+    border-width: 0px;
+
+    background-image: path(ui/menu/buttonbg.dds);
+    background-color: rgba(0.4,0.4,0.4,0.7);
+    hover-background-color: rgba(1,1,1,1);
+
+    horizontal-align: center;
+
+    font-name: fonts/AgencyFB_medium.fnt;
+    text-color: #8bb4c1;
+    text-padding: 16px;
+
+    left: -100px;
+    top: 150px;
+}
+
 button.first_run_ok { top: 175px; } 
 button.first_run_skip { top: 300px; } 
-  
-window.tutnag_window, window.tundra_window { height: 250px; }
-button.tutnag_later {
-    top: 180px;
+
+button.nag_later {
     left: 25px;
 }
 button.tutnag_stop { top: 380px; }
 
 button.tutnag_play {
     left: -225px;
-    top: 180px;
 }
 
 button.tundra_open {
-    left: -225px;
-    top: 180px;
+    left: -125px;
 }
 
 button.tundra_later {
-    left: 25px;
-    top: 180px;
+    left: 125px;
+}
+
+button.forge_open {
+    left: -125px;
+}
+
+button.forge_later {
+    left: 125px;
+}
+
+button.nocturne_open {
+    left: -125px;
+}
+
+button.nocturne_later {
+    left: 125px;
 }
 
 button.tutnag_playnow {
     left: 25px;
-    top: 180px;
 }
   
 window.credits_window 
 { 
-    //scaling: true; 
+    scaling: true;
     width: 600px; 
     height: 600px; 
     left: -300px; 
@@ -3609,5 +3834,3 @@ font.gatherplayername
     background-color: rgba(0,0,0,0);
     left: 20px;
 }
-
-]] 
